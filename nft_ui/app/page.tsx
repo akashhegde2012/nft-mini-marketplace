@@ -33,9 +33,11 @@ export default function Marketplace() {
 
   /* ================= CONNECT WALLET ================= */
   async function connectWallet() {
-    if (!window.ethereum) return alert("Install MetaMask");
+    const ethereum = (window as any).ethereum;
 
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    if (!ethereum) return alert("Install MetaMask");
+
+    const provider = new ethers.BrowserProvider(ethereum);
     const signer = await provider.getSigner();
 
     setProvider(provider);
