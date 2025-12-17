@@ -1,7 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ethers } from "ethers";
+import { ethers, BrowserProvider, JsonRpcSigner } from "ethers";
+
+
+type Listing = {
+  id: number;
+  seller: string;
+  nft: string;
+  tokenId: string;
+  price: string;
+};
 
 // 🔁 Replace with your deployed marketplace address (Sepolia)
 const MARKETPLACE_ADDRESS = "0xcb9c9eba0bf4b283989db324b0846bf506f70250";
@@ -26,10 +35,11 @@ const nftABI = [
 ];
 
 export default function Marketplace() {
-  const [provider, setProvider] = useState(null);
-  const [signer, setSigner] = useState(null);
-  const [account, setAccount] = useState(null);
-  const [listings, setListings] = useState([]);
+  const [provider, setProvider] = useState<BrowserProvider | null>(null);
+  const [signer, setSigner] = useState<JsonRpcSigner | null>(null);
+  const [account, setAccount] = useState<string | null>(null);
+
+  const [listings, setListings] = useState<Listing[]>([]);
 
   /* ================= CONNECT WALLET ================= */
   async function connectWallet() {
@@ -109,7 +119,7 @@ export default function Marketplace() {
   }
 
   /* ================= BUY NFT ================= */
-  async function buyNFT(id, price) {
+  async function buyNFT(id: number, price: string) {
     const contract = new ethers.Contract(
       MARKETPLACE_ADDRESS,
       marketplaceABI,
@@ -125,7 +135,7 @@ export default function Marketplace() {
   }
 
   /* ================= CANCEL LISTING ================= */
-  async function cancelListing(id) {
+  async function cancelListing(id: number) {
     const contract = new ethers.Contract(
       MARKETPLACE_ADDRESS,
       marketplaceABI,
